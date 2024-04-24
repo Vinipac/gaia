@@ -2,16 +2,37 @@ import {
   Text, Paper, Image, Title,
 } from '@mantine/core';
 import NextImage from 'next/image';
+import prisma from '@/lib/prisma.ts';
+import { Post } from '@prisma/client';
 import BoatImage from '../../../images/bg-7.png';
 
-export default async function Post({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function PostPage({ params }: { params: { id: string } }) {
+  const { id } = params;
+
+  console.log(id);
+
+  const post: Post = await prisma.post.findFirst({
+    where: { slug: String(id) },
+    select: {
+      id: false,
+      slug: true,
+      title: true,
+      content: true,
+      author: false,
+      authorId: false,
+      published: false,
+    },
+  });
 
   return (
     <main className="flex min-h-screen min-w-prose flex-col items-center justify-between bg-gray-300">
       <Paper shadow="xs" p="xl" className="max-w-prose">
         <div className="pb-3">
-          <Title order={1}> This is a title</Title>
+          <Title order={1}>
+            {' '}
+            {post.title}
+            {' '}
+          </Title>
           <Text> This is a subtitle </Text>
         </div>
         <div className="pb-1">
@@ -24,9 +45,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
           with shadow.
         </Text>
         <Text>
-          Slug:
-          {' '}
-          {slug}
+          {post.content}
         </Text>
       </Paper>
     </main>
