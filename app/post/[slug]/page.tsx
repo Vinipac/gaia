@@ -4,7 +4,9 @@ import {
 import NextImage from 'next/image';
 import BoatImage from '../../../images/bg-7.png';
 
-export default function Post({ params }: { params: { slug: string } }) {
+export default async function Post({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+
   return (
     <main className="flex min-h-screen min-w-prose flex-col items-center justify-between bg-gray-300">
       <Paper shadow="xs" p="xl" className="max-w-prose">
@@ -24,7 +26,7 @@ export default function Post({ params }: { params: { slug: string } }) {
         <Text>
           Slug:
           {' '}
-          {params.slug}
+          {slug}
         </Text>
       </Paper>
     </main>
