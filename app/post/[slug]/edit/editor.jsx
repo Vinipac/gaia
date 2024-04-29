@@ -5,6 +5,9 @@ import { useEditor } from '@tiptap/react';
 import Image from '@tiptap/extension-image';
 import StarterKit from '@tiptap/starter-kit';
 import { Button, ButtonGroup } from '@mantine/core';
+import prisma from '@/lib/prisma';
+
+const title = 'title text';
 
 export default function Editor() {
   const editor = useEditor({
@@ -13,6 +16,22 @@ export default function Editor() {
       Image,
     ],
   });
+
+  const sendEditorUpdate = async () => {
+    const content = editor.getJSON();
+    console.log(content);
+    const res = await fetch('/api/post', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: 'Title Test',
+        content,
+      }),
+    });
+    console.log(res);
+  };
 
   return (
     <div className="max-w-prose">
@@ -28,7 +47,7 @@ export default function Editor() {
             <RichTextEditor.Code />
           </RichTextEditor.ControlsGroup>
           <ButtonGroup>
-            <Button />
+            <Button onClick={sendEditorUpdate} />
           </ButtonGroup>
         </RichTextEditor.Toolbar>
         <RichTextEditor.Content className="max-w-prose" />

@@ -4,25 +4,18 @@ import {
 import NextImage from 'next/image';
 import prisma from '@/lib/prisma.ts';
 import { Post } from '@prisma/client';
+import { useEffect } from 'react';
 import BoatImage from '../../../images/bg-7.png';
 
-export default async function PostPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default async function PostPage({ params }: { params: { slug: string } }) {
+  console.log(`/api/post/${slug}`);
 
-  console.log(id);
-
-  const post: Post = await prisma.post.findFirst({
-    where: { slug: String(id) },
-    select: {
-      id: false,
-      slug: true,
-      title: true,
-      content: true,
-      author: false,
-      authorId: false,
-      published: false,
+  const post = await fetch(`http://localhost:3000/api/post/${slug}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
     },
-  });
+  }).then((response) => response.json());
 
   return (
     <main className="flex min-h-screen min-w-prose flex-col items-center justify-between bg-gray-300">
@@ -30,7 +23,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
         <div className="pb-3">
           <Title order={1}>
             {' '}
-            {post.title}
+            {post?.title}
             {' '}
           </Title>
           <Text> This is a subtitle </Text>
@@ -45,7 +38,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
           with shadow.
         </Text>
         <Text>
-          {post.content}
+          {post?.content}
         </Text>
       </Paper>
     </main>
