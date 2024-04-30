@@ -21,6 +21,8 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "react/function-component-definition": "off",
+        "react/require-default-props": "off",
         "linebreak-style":"off",
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".tsx"] }]
     }

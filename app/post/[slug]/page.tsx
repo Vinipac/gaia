@@ -2,20 +2,26 @@ import {
   Text, Paper, Image, Title,
 } from '@mantine/core';
 import NextImage from 'next/image';
-import prisma from '@/lib/prisma.ts';
-import { Post } from '@prisma/client';
-import { useEffect } from 'react';
+import parse from 'html-react-parser';
 import BoatImage from '../../../images/bg-7.png';
+import { getPostBySlug } from '../actions';
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
   console.log(`/api/post/${slug}`);
 
-  const post = await fetch(`http://localhost:3000/api/post/${slug}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  }).then((response) => response.json());
+  // const post = await fetch(`localhost:3000/api/post/slug/${slug}`, {
+  //   method: 'GET',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   next: {
+  //     tags: [`post-${slug}`],
+  //   },
+  // }).then((response) => response.json());
+
+  const post: Post = await getPostBySlug(slug);
+  const { title, content } = post;
 
   return (
     <main className="flex min-h-screen min-w-prose flex-col items-center justify-between bg-gray-300">
@@ -23,7 +29,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
         <div className="pb-3">
           <Title order={1}>
             {' '}
-            {post?.title}
+            {`${title}`}
             {' '}
           </Title>
           <Text> This is a subtitle </Text>
@@ -32,14 +38,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
           <Image component={NextImage} src={BoatImage} alt="Boat Image" w="auto" fit="contain" className="py-1" />
           <Text ta="center" size="xm" c="gray">Image text</Text>
         </div>
-        <Text className="py-1">Paper is the most basic ui component</Text>
-        <Text>
-          Use it to create cards, dropdowns, modals and other components that require background
-          with shadow.
-        </Text>
-        <Text>
-          {post?.content}
-        </Text>
+        {parse(content)}
       </Paper>
     </main>
   );

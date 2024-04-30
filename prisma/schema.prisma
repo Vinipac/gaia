@@ -14,8 +14,8 @@ datasource db {
 model Post {
   id        String     @default(cuid()) @id
   title     String?    
-  slug      String?
-  content   Json?       
+  slug      String?    @unique
+  content   String?       
   published Boolean    @default(false)
   author    User?      @relation(fields: [authorId], references: [id])
   authorId  String?
